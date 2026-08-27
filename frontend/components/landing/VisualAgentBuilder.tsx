@@ -75,6 +75,74 @@ const INITIAL_EDGES: CanvasEdge[] = [
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
+const VB_CSS = `
+  .vb-section .vb-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  }
+  @media (max-width: 900px) {
+    .vb-section .vb-grid { grid-template-columns: 1fr; }
+  }
+  .vb-palette {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 18px;
+    padding: 20px;
+    backdrop-filter: blur(14px);
+  }
+  .vb-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: grab;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    border-radius: 12px;
+    padding: 10px 12px;
+    transition: border-color 0.18s ease;
+  }
+  .vb-item:hover { border-color: rgba(124, 58, 237, 0.5); }
+  .vb-item:active { cursor: grabbing; }
+  .vb-node-chip {
+    height: 34px; width: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; border: 1px solid;
+    flex-shrink: 0;
+  }
+  .vb-canvas {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    min-height: 460px;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle, rgba(148,163,184,0.14) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .vb-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid var(--border); background: var(--surface-2);
+  }
+  .vb-btn {
+    padding: 7px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--surface-2); color: var(--text);
+    transition: background 0.18s ease, transform 0.18s ease;
+  }
+  .vb-btn:hover { transform: translateY(-1px); }
+  .vb-btn-danger { color: #fda4af; border-color: rgba(244,63,94,0.4); }
+  .vb-btn-save {
+    color: #fff; border: none;
+    background: linear-gradient(115deg, #a855f7, #6366f1);
+  }
+  .vb-node-delete { display: none !important; }
+  .vb-node-chip:hover > .vb-node-delete { display: flex !important; }
+`;
+
 export const VisualAgentBuilder = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const linkRef = useRef<string | null>(null);
@@ -238,73 +306,7 @@ export const VisualAgentBuilder = () => {
 
   return (
     <section className="section vb-section">
-      <style>{`
-        .vb-section .vb-grid {
-          display: grid;
-          gap: 24px;
-          grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
-        }
-        @media (max-width: 900px) {
-          .vb-section .vb-grid { grid-template-columns: 1fr; }
-        }
-        .vb-palette {
-          border: 1px solid var(--border);
-          background: var(--surface);
-          border-radius: 18px;
-          padding: 20px;
-          backdrop-filter: blur(14px);
-        }
-        .vb-item {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          cursor: grab;
-          border: 1px solid var(--border);
-          background: var(--surface-2);
-          border-radius: 12px;
-          padding: 10px 12px;
-          transition: border-color 0.18s ease;
-        }
-        .vb-item:hover { border-color: rgba(124, 58, 237, 0.5); }
-        .vb-item:active { cursor: grabbing; }
-        .vb-node-chip {
-          height: 34px; width: 34px;
-          display: flex; align-items: center; justify-content: center;
-          border-radius: 10px; border: 1px solid;
-          flex-shrink: 0;
-        }
-        .vb-canvas {
-          border: 1px solid var(--border);
-          border-radius: 18px;
-          min-height: 460px;
-          position: relative;
-          overflow: hidden;
-          background:
-            radial-gradient(circle, rgba(148,163,184,0.14) 1px, transparent 1px);
-          background-size: 22px 22px;
-        }
-        .vb-chip {
-          display: inline-flex; align-items: center; gap: 6px;
-          padding: 4px 10px; border-radius: 999px;
-          font-size: 12px; font-weight: 600;
-          border: 1px solid var(--border); background: var(--surface-2);
-        }
-        .vb-btn {
-          padding: 7px 14px; border-radius: 10px;
-          font-size: 13px; font-weight: 600;
-          border: 1px solid var(--border);
-          background: var(--surface-2); color: var(--text);
-          transition: background 0.18s ease, transform 0.18s ease;
-        }
-        .vb-btn:hover { transform: translateY(-1px); }
-        .vb-btn-danger { color: #fda4af; border-color: rgba(244,63,94,0.4); }
-        .vb-btn-save {
-          color: #fff; border: none;
-          background: linear-gradient(115deg, #a855f7, #6366f1);
-        }
-        .vb-node-delete { display: none !important; }
-        .vb-node-chip:hover > .vb-node-delete { display: flex !important; }
-      `}</style>
+      <style dangerouslySetInnerHTML={{ __html: VB_CSS }} />
 
       {/* Section header */}
       <div className="container" style={{ marginBottom: 40 }}>

@@ -5,10 +5,11 @@ import Link from "next/link";
 
 export function Navbar() {
   const links = [
-    { label: "Product", href: "#features" },
-    { label: "How it works", href: "#how" },
-    { label: "Showcase", href: "#showcase" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Solutions", href: "/solutions" },
+    { label: "Resources", href: "/resources" },
+    { label: "Blog", href: "/blog" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "About", href: "/about" },
   ];
 
   return (
@@ -20,8 +21,14 @@ export function Navbar() {
     >
       <div className="container nav-inner">
         <Link href="/" className="brand">
-          <span className="vb-logo-beacon">
-            <span className="vb-logo-beam" />
+          <span className="vb-logo-orbit">
+            <span className="vb-logo-track" />
+            <span className="vb-logo-dot-wrap">
+              <span className="vb-logo-dot" />
+            </span>
+            <span className="vb-logo-dot-wrap alt">
+              <span className="vb-logo-dot" />
+            </span>
             <img src="/logo.png" alt="MyFamilyAssistant.ai" style={{ height: 28, width: "auto", display: "block", borderRadius: 6, position: "relative", zIndex: 2 }} />
           </span>
           MyFamilyAssistant<span className="brand-dot">.ai</span>

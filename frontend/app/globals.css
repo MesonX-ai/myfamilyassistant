@@ -7,6 +7,8 @@
   --indigo: #6366f1;
   --cyan: #22d3ee;
   --pink: #e879f9;
+  --logo-blue: #1f9ad6;
+  --logo-green: #8dc63f;
   --surface: rgba(255, 255, 255, 0.04);
   --surface-2: rgba(255, 255, 255, 0.06);
   --border: rgba(255, 255, 255, 0.09);
@@ -219,60 +221,82 @@ input {
   -webkit-text-fill-color: transparent;
 }
 
-/* Lighthouse beacon animation around the header logo */
-.vb-logo-beacon {
+/* Glowing dot flowing along a circular line loop around the header logo */
+.vb-logo-orbit {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  overflow: visible;
+  flex-shrink: 0;
 }
 
-.vb-logo-beacon::after {
+.vb-logo-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(31, 154, 214, 0.3);
+  background: conic-gradient(
+    from 0deg,
+    rgba(31, 154, 214, 0.45),
+    rgba(141, 198, 63, 0.08) 50%,
+    rgba(141, 198, 63, 0.45)
+  );
+  -webkit-mask: radial-gradient(circle, transparent 19px, #000 19.5px, #000 20.5px, transparent 21px);
+  mask: radial-gradient(circle, transparent 19px, #000 19.5px, #000 20.5px, transparent 21px);
+  opacity: 0.9;
+}
+
+.vb-logo-dot-wrap {
+  position: absolute;
+  inset: 0;
+  animation: vb-logo-orbit 3.2s linear infinite;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.vb-logo-dot-wrap.alt {
+  animation-duration: 5.6s;
+  animation-direction: reverse;
+}
+
+.vb-logo-dot {
+  position: absolute;
+  top: -2.5px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--logo-blue);
+  box-shadow: 0 0 12px 3px rgba(31, 154, 214, 0.9);
+}
+
+.vb-logo-dot::after {
   content: "";
   position: absolute;
   inset: -6px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.45), transparent 65%);
-  animation: vb-beacon-pulse 2.6s ease-in-out infinite;
-  z-index: 1;
+  background: radial-gradient(circle, rgba(31, 154, 214, 0.5), transparent 70%);
 }
 
-.vb-logo-beam {
-  position: absolute;
-  inset: -10px;
-  border-radius: 50%;
-  z-index: 0;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 300deg,
-    rgba(34, 211, 238, 0.55) 340deg,
-    rgba(124, 58, 237, 0.65) 352deg,
-    rgba(34, 211, 238, 0.55) 4deg,
-    transparent 60deg
-  );
-  -webkit-mask: radial-gradient(circle, transparent 16px, #000 17px, #000 22px, transparent 23px);
-  mask: radial-gradient(circle, transparent 16px, #000 17px, #000 22px, transparent 23px);
-  animation: vb-beacon-spin 4.5s linear infinite;
-  pointer-events: none;
+.vb-logo-dot-wrap.alt .vb-logo-dot {
+  background: var(--logo-green);
+  box-shadow: 0 0 12px 3px rgba(141, 198, 63, 0.85);
 }
 
-@keyframes vb-beacon-spin {
+.vb-logo-dot-wrap.alt .vb-logo-dot::after {
+  background: radial-gradient(circle, rgba(141, 198, 63, 0.5), transparent 70%);
+}
+
+@keyframes vb-logo-orbit {
   to { transform: rotate(360deg); }
 }
 
-@keyframes vb-beacon-pulse {
-  0%, 100% { opacity: 0.55; transform: scale(0.92); }
-  50% { opacity: 1; transform: scale(1.05); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .vb-logo-beam { animation: none; }
-  .vb-logo-beacon::after { animation: none; }
+  .vb-logo-dot-wrap { animation: none; }
 }
 
 .nav-links {

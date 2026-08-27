@@ -1,17 +1,31 @@
 import Link from "next/link";
 
-const cols = [
+const cols: { h: string; links: [string, string][] }[] = [
   {
     h: "Product",
-    links: ["Studio", "Integrations", "Pricing", "Changelog"],
+    links: [
+      ["Solutions", "/solutions"],
+      ["Resources", "/resources"],
+      ["Pricing", "/pricing"],
+    ],
   },
   {
     h: "Developers",
-    links: ["Docs", "API Reference", "Status", "GitHub"],
+    links: [
+      ["Docs", "#"],
+      ["API Reference", "#"],
+      ["Status", "#"],
+      ["GitHub", "#"],
+    ],
   },
   {
     h: "Company",
-    links: ["About", "Careers", "Blog", "Contact"],
+    links: [
+      ["About", "/about"],
+      ["Blog", "/blog"],
+      ["Contact", "#"],
+      ["Security", "#"],
+    ],
   },
 ];
 
@@ -31,9 +45,9 @@ export function Footer() {
         {cols.map((c) => (
           <div key={c.h}>
             <h4>{c.h}</h4>
-            {c.links.map((l) => (
-              <a key={l} href="#">
-                {l}
+            {c.links.map(([label, href]) => (
+              <a key={label} href={href}>
+                {label}
               </a>
             ))}
           </div>

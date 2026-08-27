@@ -87,7 +87,9 @@ export default function LoginPage() {
     setSession(null);
     setStatus("idle");
     setError(null);
-return (
+  };
+
+  return (
     <div
       style={{
         minHeight: "100vh",
@@ -238,4 +240,3 @@ return (
     </div>
   );
 }
-  };
