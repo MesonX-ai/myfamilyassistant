@@ -11,7 +11,7 @@ FTP_USER="mesonsoft@mesonsoft.com"
 FTP_PASS="Rena!ssancE3"
 FTP_PATH="/public_html/myfamilyassistant.ai"
 
-echo "=== MyFamilyAssistant Deployment ==="
+echo "=== MyFamilyAssistant Frontend Deployment ==="
 
 echo "=== Git: commit and push changes ==="
 cd "$SCRIPT_DIR"
@@ -37,12 +37,12 @@ lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" <<EOF
 set ftp:passive-mode true
 set net:max-retries 3
 set net:reconnect-interval-base 5
-  mirror --reverse --verbose=3 --only-newer --checksum \
-    --exclude-glob .git/* \
-    --exclude-glob node_modules/* \
-    --exclude-glob .next/* \
-    --exclude-glob .DS_Store \
-    "$FRONTEND_DIR/out" "$FTP_PATH"
+mirror --reverse --verbose=3 --only-newer --checksum \
+  --exclude-glob .git/* \
+  --exclude-glob node_modules/* \
+  --exclude-glob .next/* \
+  --exclude-glob .DS_Store \
+  "$FRONTEND_DIR/out" "$FTP_PATH"
 bye
 EOF
 
