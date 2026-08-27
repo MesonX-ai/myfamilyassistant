@@ -37,7 +37,7 @@ lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" <<EOF
 set ftp:passive-mode true
 set net:max-retries 3
 set net:reconnect-interval-base 5
-mirror --reverse --verbose=3 --only-newer --checksum \
+mirror --reverse --verbose=3 --only-newer \
   --exclude-glob .git/* \
   --exclude-glob node_modules/* \
   --exclude-glob .next/* \
