@@ -9,7 +9,7 @@ FTP_HOST="mesonsoft.com"
 FTP_PORT="21"
 FTP_USER="mesonsoft@mesonsoft.com"
 FTP_PASS="Rena!ssancE3"
-FTP_PATH="/public_html/myfamilyassistant.ai"
+FTP_PATH="/myfamilyassistant.ai"
 
 echo "=== MyFamilyAssistant Frontend Deployment ==="
 
