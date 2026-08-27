@@ -20,7 +20,10 @@ export function Navbar() {
     >
       <div className="container nav-inner">
         <Link href="/" className="brand">
-          <img src="/logo.png" alt="MyFamilyAssistant.ai" style={{ height: 28, width: "auto", display: "block", borderRadius: 6 }} />
+          <span className="vb-logo-beacon">
+            <span className="vb-logo-beam" />
+            <img src="/logo.png" alt="MyFamilyAssistant.ai" style={{ height: 28, width: "auto", display: "block", borderRadius: 6, position: "relative", zIndex: 2 }} />
+          </span>
           MyFamilyAssistant<span className="brand-dot">.ai</span>
         </Link>
         <nav className="nav-links">

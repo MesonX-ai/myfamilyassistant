@@ -219,6 +219,62 @@ input {
   -webkit-text-fill-color: transparent;
 }
 
+/* Lighthouse beacon animation around the header logo */
+.vb-logo-beacon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+.vb-logo-beacon::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.45), transparent 65%);
+  animation: vb-beacon-pulse 2.6s ease-in-out infinite;
+  z-index: 1;
+}
+
+.vb-logo-beam {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  z-index: 0;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 300deg,
+    rgba(34, 211, 238, 0.55) 340deg,
+    rgba(124, 58, 237, 0.65) 352deg,
+    rgba(34, 211, 238, 0.55) 4deg,
+    transparent 60deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 16px, #000 17px, #000 22px, transparent 23px);
+  mask: radial-gradient(circle, transparent 16px, #000 17px, #000 22px, transparent 23px);
+  animation: vb-beacon-spin 4.5s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes vb-beacon-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes vb-beacon-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vb-logo-beam { animation: none; }
+  .vb-logo-beacon::after { animation: none; }
+}
+
 .nav-links {
   display: flex;
   gap: 26px;

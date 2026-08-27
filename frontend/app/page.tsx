@@ -2,6 +2,7 @@ import { AnimatedBackground } from "@/components/landing/AnimatedBackground";
 import { Navbar } from "@/components/landing/Navbar";
 import { Hero } from "@/components/landing/Hero";
 import { LogoCloud } from "@/components/landing/LogoCloud";
+import { VisualAgentBuilder } from "@/components/landing/VisualAgentBuilder";
 import { Features } from "@/components/landing/Features";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { Showcase } from "@/components/landing/Showcase";
@@ -16,9 +17,10 @@ export default function Page() {
       <Navbar />
       <Hero />
       <LogoCloud />
+      <VisualAgentBuilder />
       <Features />
-      <HowItWorks />
       <Showcase />
+      <HowItWorks />
       <Stats />
       <CTA />
       <Footer />
