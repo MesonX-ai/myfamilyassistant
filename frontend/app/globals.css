@@ -88,7 +88,7 @@ input {
 }
 
 .btn-primary {
-  background: var(--grad);
+  background: linear-gradient(90deg, #a855f7 0%, #6366f1 42%, #22d3ee 100%);
   color: #0a0a14;
   box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.7);
 }
@@ -199,7 +199,7 @@ input {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 0;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 18px;
@@ -215,10 +215,22 @@ input {
 }
 
 .brand-dot {
-  background: var(--grad);
+  background: linear-gradient(90deg, var(--logo-blue), var(--logo-green), var(--logo-blue));
+  background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: brand-dot-shift 6s linear infinite;
+}
+
+/* Match the header's visible logo-to-text gap in the footer (no orbit ring there) */
+.footer .brand img {
+  margin-right: 12px;
+}
+
+@keyframes brand-dot-shift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 /* Glowing dot flowing along a circular line loop around the header logo */
@@ -231,6 +243,7 @@ input {
   height: 44px;
   border-radius: 50%;
   flex-shrink: 0;
+  margin-right: 20px;
 }
 
 .vb-logo-track {
@@ -297,6 +310,7 @@ input {
 
 @media (prefers-reduced-motion: reduce) {
   .vb-logo-dot-wrap { animation: none; }
+  .brand-dot { animation: none; }
 }
 
 .nav-links {
