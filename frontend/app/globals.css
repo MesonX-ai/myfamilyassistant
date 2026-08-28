@@ -456,3 +456,46 @@ input {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Canvas: neutralize React Flow's built-in white node box.
+   Our custom node type "output" collides with the library's default
+   .react-flow__node-output styling (white background, 150px width). */
+.react-flow .react-flow__node-trigger,
+.react-flow .react-flow__node-llm_agent,
+.react-flow .react-flow__node-output,
+.react-flow .react-flow__node-default {
+  width: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  text-align: left;
+}
+.react-flow .react-flow__node-output.selectable:hover,
+.react-flow .react-flow__node-default.selectable:hover,
+.react-flow .react-flow__node-output.selectable.selected,
+.react-flow .react-flow__node-default.selectable.selected {
+  box-shadow: none;
+}
+
+/* Spec §6.3 — hand the viewport transform to the GPU for large graphs */
+.react-flow__viewport {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Spec §3 — running-node pulse, dark-theme adapted */
+@keyframes myfa-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.45), 0 18px 40px -22px rgba(0, 0, 0, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(99, 102, 241, 0), 0 18px 40px -22px rgba(0, 0, 0, 0.8);
+  }
+}
+.myfa-node-running {
+  animation: myfa-pulse 1.4s ease-in-out infinite;
+}
