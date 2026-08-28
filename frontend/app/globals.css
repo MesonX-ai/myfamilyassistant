@@ -499,3 +499,39 @@ input {
 .myfa-node-running {
   animation: myfa-pulse 1.4s ease-in-out infinite;
 }
+
+/* Header "Open Studio" CTA — indigo ring pulse to draw the eye.
+   Box-shadow based so it can't be occluded by ancestor backgrounds. */
+@keyframes vb-cta-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7), 0 0 22px rgba(34, 211, 238, 0.35);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 14px rgba(99, 102, 241, 0), 0 0 30px rgba(34, 211, 238, 0.5);
+    transform: scale(1.04);
+  }
+}
+.vb-cta-glow {
+  animation: vb-cta-pulse 2s ease-out infinite;
+}
+.vb-cta-sparkle {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 17px;
+  vertical-align: -2px;
+  color: #22d3ee;
+  filter: drop-shadow(0 0 5px rgba(34, 211, 238, 0.9));
+  animation: vb-sparkle-twinkle 1.6s ease-in-out infinite;
+}
+@keyframes vb-sparkle-twinkle {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  25% { opacity: 0.4; transform: scale(0.8) rotate(-14deg); }
+  50% { opacity: 1; transform: scale(1.25) rotate(10deg); }
+  70% { opacity: 0.55; transform: scale(0.9) rotate(0deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vb-cta-glow {
+    animation: none;
+  }
+}

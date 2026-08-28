@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Icon } from "@iconify/react";
 
 export function Navbar() {
   const links = [
@@ -44,7 +45,8 @@ export function Navbar() {
           <Link className="btn btn-ghost" href="/login">
             Sign in
           </Link>
-          <Link className="btn btn-primary" href="/canvas">
+          <Link className="btn btn-primary vb-cta-glow" href="/canvas">
+            <Icon className="vb-cta-sparkle" icon="lucide:sparkles" />
             Open Studio
           </Link>
         </div>
