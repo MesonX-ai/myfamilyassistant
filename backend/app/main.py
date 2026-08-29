@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 
+from .cache import build_cache_key, get_cached, set_cached
 from .compiler import ReactFlowCanvasPayload, build_executable_graph
 
 app = FastAPI(
@@ -24,6 +25,11 @@ app.add_middleware(
     summary="Execute Visual Workflow Canvas Payload",
 )
 async def execute_canvas_workflow(payload: ReactFlowCanvasPayload, initial_query: str = ""):
+    cache_key = build_cache_key(payload.model_dump(), initial_query)
+    cached_result = await get_cached(cache_key)
+    if cached_result is not None:
+        return cached_result
+
     try:
         runtime_engine = build_executable_graph(payload)
 
@@ -36,12 +42,14 @@ async def execute_canvas_workflow(payload: ReactFlowCanvasPayload, initial_query
 
         execution_summary = await runtime_engine.ainvoke(initial_state)
 
-        return {
+        result = {
             "status": "success",
             "workspace_id": payload.workspace_id,
             "result": execution_summary.get("final_response"),
             "telemetry": execution_summary.get("execution_telemetry"),
         }
+        await set_cached(cache_key, result)
+        return result
     except ValueError as format_error:
         raise HTTPException(status_code=400, detail=str(format_error))
     except Exception as runtime_fault:

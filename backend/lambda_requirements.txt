@@ -1,0 +1,7 @@
+# Runtime dependencies for the AWS Lambda deployment (excludes dev/server tooling)
+fastapi>=0.110,<1
+pydantic>=2,<3
+typing_extensions
+langgraph>=0.2
+mangum>=0.17
+upstash-redis>=1.0

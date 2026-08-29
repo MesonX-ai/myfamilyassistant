@@ -239,7 +239,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
 
     try {
       const res = await fetch(
-        `${apiBase}/api/v1/pipeline/execute-canvas`,
+        `${apiBase}/api/v1/pipeline/execute-canvas?initial_query=${encodeURIComponent(query)}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
