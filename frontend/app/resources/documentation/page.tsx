@@ -126,18 +126,7 @@ export default function DocumentationPage() {
                     <Link
                       key={aidx}
                       href="#"
-                      style={{
-                        padding: "10px",
-                        borderRadius: 8,
-                        transition: "all 0.2s ease",
-                        textDecoration: "none",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = "rgba(168, 85, 247, 0.1)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = "transparent";
-                      }}
+                      className="doc-link"
                     >
                       <div style={{ fontWeight: 600, color: "var(--text)", marginBottom: 4 }}>
                         {article.title}

@@ -1,30 +1,22 @@
-"use client";
-
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { MarketingPage } from "@/components/landing/MarketingPage";
 import { getBlogPost, getAllBlogPosts } from "@/lib/blog-data";
 
-export default function BlogPostPage() {
-  const params = useParams();
-  const slug = params.slug as string;
-  const post = getBlogPost(slug);
+// Static export (output: "export") requires every dynamic route to declare which
+// paths to pre-render. The slugs come from the blog data module.
+export function generateStaticParams() {
+  return getAllBlogPosts().map((post) => ({ slug: post.slug }));
+}
+
+export default function BlogPostPage({ params }: { params: { slug: string } }) {
+  const post = getBlogPost(params.slug);
   const allPosts = getAllBlogPosts();
 
+  // Unknown slugs render the app's 404 page (default for static export).
   if (!post) {
-    return (
-      <MarketingPage title="Post not found">
-        <section className="section" style={{ paddingTop: 24, position: "relative", zIndex: 1 }}>
-          <div className="container" style={{ maxWidth: 780, textAlign: "center" }}>
-            <p style={{ color: "var(--muted)", marginBottom: 24 }}>This blog post doesn't exist.</p>
-            <Link href="/blog" className="btn btn-primary">
-              Back to Blog
-            </Link>
-          </div>
-        </section>
-      </MarketingPage>
-    );
+    notFound();
   }
 
   // Get related posts (same category, but not this one)
