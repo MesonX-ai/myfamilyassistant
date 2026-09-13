@@ -12,6 +12,7 @@ import {
 
 export type AgentNodeType =
   | "trigger"
+  | "text_input"
   | "llm_agent"
   | "output"
   | "agent"

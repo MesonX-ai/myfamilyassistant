@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Background, Controls, MiniMap, ReactFlow, ReactFlowProvider, useReactFlow, type Node } from "reactflow";
 import "reactflow/dist/style.css";
 import { Icon } from "@iconify/react";
@@ -11,6 +11,7 @@ import { DragDropInput } from "./DragDropInput";
 
 const AGENT_NODE_TYPES: AgentNodeType[] = [
   "trigger",
+  "text_input",
   "llm_agent",
   "output",
   "agent",
@@ -149,6 +150,25 @@ function ConfigEditor({
 }) {
   const cfg = (node.data?.config ?? {}) as Record<string, unknown>;
   switch (node.type) {
+    case "text_input":
+      return (
+        <div>
+          <label style={inspectorLabel}>Initial Text Input</label>
+          <DragDropInput
+            value={(cfg.input as string) ?? ""}
+            onChange={(text) => update("input", text)}
+            placeholder="Drag .txt/.pdf/.docx files here or type text..."
+            onError={(err) => console.error("File upload error:", err)}
+          />
+          <label style={inspectorLabel}>Variable Name</label>
+          <input
+            value={(cfg.variableName as string) ?? "userInput"}
+            onChange={(e) => update("variableName", e.target.value)}
+            placeholder="Variable name for downstream nodes"
+            style={inspectorInput}
+          />
+        </div>
+      );
     case "llm_agent":
     case "agent":
       return (
@@ -269,7 +289,6 @@ function CanvasInner() {
   } = useCanvasStore();
   const { screenToFlowPosition } = useReactFlow();
   const selectedNode = nodes.find((n) => n.id === selectedNodeId) ?? null;
-  const [fileError, setFileError] = useState<string | null>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -332,6 +351,9 @@ function CanvasInner() {
           <button style={buttonStyle} onClick={() => addNode("trigger")}>
             + Trigger
           </button>
+          <button style={buttonStyle} onClick={() => addNode("text_input")}>
+            + Text Input
+          </button>
           <button style={buttonStyle} onClick={() => addNode("llm_agent")}>
             + LLM Agent
           </button>
@@ -344,37 +366,22 @@ function CanvasInner() {
             marginLeft: "auto",
             display: "flex",
             gap: 8,
+            alignItems: "center",
             flexWrap: "wrap",
-            flexDirection: "column",
-            alignItems: "flex-end",
           }}
         >
-          {fileError && (
-            <div
-              style={{
-                fontSize: "12px",
-                color: "#f87171",
-                padding: "4px 8px",
-                borderRadius: 4,
-                background: "rgba(248, 113, 113, 0.1)",
-                border: "1px solid #f87171",
-              }}
-            >
-              {fileError}
-            </div>
-          )}
-          <div style={{ display: "flex", gap: 8, alignItems: "center", width: "100%", maxWidth: "600px" }}>
-            <DragDropInput
-              value={query}
-              onChange={setQuery}
-              placeholder="Drag .txt/.pdf/.docx or type initial query..."
-              disabled={status === "running"}
-              onError={(err) => setFileError(err)}
-              onFileProcessing={(processing) => {
-                if (!processing) setFileError(null);
-              }}
-            />
-          </div>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Initial query..."
+            style={{
+              padding: "6px 10px",
+              borderRadius: 8,
+              border: "1px solid #334155",
+              background: "#1e293b",
+              color: "white",
+            }}
+          />
           <button
             onClick={simulate}
             disabled={status === "running"}

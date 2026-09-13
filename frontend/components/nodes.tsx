@@ -8,6 +8,7 @@ import { useCanvasStore, type AgentNodeType, type AgentNodeStatus } from "@/lib/
 /** Type accents + fallback icons, matching the homepage builder's node chips */
 const TYPE_STYLE: Record<AgentNodeType, { accent: string; icon: string }> = {
   trigger: { accent: "#22d3ee", icon: "lucide:plug-zap" },
+  text_input: { accent: "#06b6d4", icon: "lucide:input" },
   llm_agent: { accent: "#a855f7", icon: "lucide:bot" },
   output: { accent: "#34d399", icon: "lucide:mail" },
   agent: { accent: "#a855f7", icon: "lucide:bot" },
