@@ -6,6 +6,7 @@ import "reactflow/dist/style.css";
 import { Icon } from "@iconify/react";
 import { useCanvasStore, type AgentNodeType, type AgentNodeData } from "@/lib/store";
 import { AgentNode } from "./nodes";
+import { SampleWorkflowLoader } from "./SampleWorkflowLoader";
 
 const AGENT_NODE_TYPES: AgentNodeType[] = [
   "trigger",
@@ -325,6 +326,7 @@ function CanvasInner() {
       >
         <strong style={{ fontSize: 16 }}>Agentic Workflow Platform</strong>
         <div style={{ display: "flex", gap: 8, marginLeft: 8, flexWrap: "wrap" }}>
+          <SampleWorkflowLoader />
           <button style={buttonStyle} onClick={() => addNode("trigger")}>
             + Trigger
           </button>

@@ -65,6 +65,7 @@ interface CanvasState {
   simulate: () => Promise<void>;
   setQuery: (q: string) => void;
   run: () => Promise<void>;
+  loadWorkflow: (nodes: Node<AgentNodeData>[], edges: Edge[], query?: string) => void;
   clear: () => void;
   reset: () => void;
   save: () => void;
@@ -222,6 +223,19 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     });
   },
   setQuery: (q) => set({ query: q }),
+  loadWorkflow: (workflowNodes, workflowEdges, workflowQuery) => {
+    set({
+      nodes: workflowNodes,
+      edges: workflowEdges,
+      query: workflowQuery ?? "",
+      result: null,
+      telemetry: null,
+      status: "idle",
+      error: null,
+      selectedNodeId: null,
+      activeExecutionId: null,
+    });
+  },
   run: async () => {
     const { nodes, edges, query } = get();
     const apiBase = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
