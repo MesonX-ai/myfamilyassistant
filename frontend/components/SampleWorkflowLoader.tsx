@@ -150,20 +150,24 @@ export function SampleWorkflowLoader({ onClose }: SampleWorkflowLoaderProps) {
               color: "#64748b",
             }}
           >
-            ✨ These examples include sample input text. Just click "Run Pipeline" to execute them
-            with your sQuark Flow backend!
+            {`✨ These examples include sample input text. Just click "Run Pipeline" to execute them with your sQuark Flow backend!`}
           </div>
         </div>
       )}
 
       {isOpen && (
-        <div
+        <button
           style={{
             position: "fixed",
             inset: 0,
             zIndex: 40,
+            background: "transparent",
+            border: "none",
+            cursor: "default",
+            padding: 0,
           }}
           onClick={() => setIsOpen(false)}
+          aria-label="Close sample workflow menu"
         />
       )}
     </div>
