@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Background, Controls, MiniMap, ReactFlow, ReactFlowProvider, useReactFlow, type Node } from "reactflow";
 import "reactflow/dist/style.css";
 import { Icon } from "@iconify/react";
 import { useCanvasStore, type AgentNodeType, type AgentNodeData } from "@/lib/store";
 import { AgentNode } from "./nodes";
 import { SampleWorkflowLoader } from "./SampleWorkflowLoader";
+import { DragDropInput } from "./DragDropInput";
 
 const AGENT_NODE_TYPES: AgentNodeType[] = [
   "trigger",
@@ -268,6 +269,7 @@ function CanvasInner() {
   } = useCanvasStore();
   const { screenToFlowPosition } = useReactFlow();
   const selectedNode = nodes.find((n) => n.id === selectedNodeId) ?? null;
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -342,22 +344,37 @@ function CanvasInner() {
             marginLeft: "auto",
             display: "flex",
             gap: 8,
-            alignItems: "center",
             flexWrap: "wrap",
+            flexDirection: "column",
+            alignItems: "flex-end",
           }}
         >
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Initial query..."
-            style={{
-              padding: "6px 10px",
-              borderRadius: 8,
-              border: "1px solid #334155",
-              background: "#1e293b",
-              color: "white",
-            }}
-          />
+          {fileError && (
+            <div
+              style={{
+                fontSize: "12px",
+                color: "#f87171",
+                padding: "4px 8px",
+                borderRadius: 4,
+                background: "rgba(248, 113, 113, 0.1)",
+                border: "1px solid #f87171",
+              }}
+            >
+              {fileError}
+            </div>
+          )}
+          <div style={{ display: "flex", gap: 8, alignItems: "center", width: "100%", maxWidth: "600px" }}>
+            <DragDropInput
+              value={query}
+              onChange={setQuery}
+              placeholder="Drag .txt/.pdf/.docx or type initial query..."
+              disabled={status === "running"}
+              onError={(err) => setFileError(err)}
+              onFileProcessing={(processing) => {
+                if (!processing) setFileError(null);
+              }}
+            />
+          </div>
           <button
             onClick={simulate}
             disabled={status === "running"}
