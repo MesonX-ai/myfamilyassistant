@@ -230,13 +230,12 @@ print_info "Uploading to GoDaddy FTP: $FTP_HOST:$FTP_PATH"
 require_command lftp
 require_command python3
 
-local tmp_dir
 tmp_dir="$(mktemp -d)"
-local local_manifest="$tmp_dir/local-manifest.sha256"
-local remote_manifest="$tmp_dir/remote-manifest.sha256"
-local changed_list="$tmp_dir/changed-files.txt"
-local delta_dir="$tmp_dir/upload-delta"
-local cache_manifest="$SCRIPT_DIR/.deploy/last-deploy-manifest.sha256"
+local_manifest="$tmp_dir/local-manifest.sha256"
+remote_manifest="$tmp_dir/remote-manifest.sha256"
+changed_list="$tmp_dir/changed-files.txt"
+delta_dir="$tmp_dir/upload-delta"
+cache_manifest="$SCRIPT_DIR/.deploy/last-deploy-manifest.sha256"
 mkdir -p "$(dirname "$cache_manifest")"
 
 build_local_manifest "$local_manifest"
@@ -256,7 +255,6 @@ fi
 
 build_changed_files_list "$local_manifest" "$remote_manifest" "$changed_list"
 
-local changed_count
 changed_count="$(wc -l < "$changed_list" | tr -d ' ')"
 
 if [[ "$changed_count" == "0" ]]; then
