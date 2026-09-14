@@ -185,18 +185,18 @@ fi
 #    Note: .env.local takes precedence, so we temporarily move it to ensure
 #    .env.production is used.
 # ------------------------------------------------------------------------------
-echo "=== Writing frontend/.env.production (API base) ==="
+print_info "Writing frontend/.env.production (API base)"
 printf 'NEXT_PUBLIC_API_BASE=%s\n' "$API_BASE" > "$FRONTEND_DIR/.env.production"
 
 # Temporarily move .env.local to prevent it from overriding .env.production
-local env_local_backup=""
+env_local_backup=""
 if [[ -f "$FRONTEND_DIR/.env.local" ]]; then
   env_local_backup="$FRONTEND_DIR/.env.local.backup.$$"
   print_info "Temporarily moving .env.local to use .env.production during build..."
   mv "$FRONTEND_DIR/.env.local" "$env_local_backup"
 fi
 
-echo "=== Build Next.js frontend (static export) ==="
+print_info "Building Next.js frontend (static export)"
 cd "$FRONTEND_DIR"
 npm run build
 
