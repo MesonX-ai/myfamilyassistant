@@ -631,6 +631,36 @@ function CanvasInner() {
               />
             </div>
           )}
+          {selectedNode?.type === "text_input" && (
+            <div
+              style={{
+                marginBottom: 20,
+                padding: 12,
+                borderRadius: 10,
+                border: "1px solid #1e293b",
+                background: "#0b1120",
+              }}
+            >
+              <h4
+                style={{
+                  margin: "0 0 12px",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: 2,
+                  textTransform: "uppercase",
+                  color: "#06b6d4",
+                }}
+              >
+                ◆ Upload File
+              </h4>
+              <DragDropInput
+                value={(selectedNode.data?.config?.input as string) ?? ""}
+                onChange={(text) => updateNodeConfig(selectedNode.id, "input", text)}
+                placeholder="Drag .txt/.pdf/.docx files here or type text..."
+                onError={(err) => console.error("File upload error:", err)}
+              />
+            </div>
+          )}
           <h3
             style={{
               margin: "0 0 8px",
