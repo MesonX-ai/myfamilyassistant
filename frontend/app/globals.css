@@ -19,6 +19,46 @@
   --maxw: 1180px;
 }
 
+/* ===== VS Code-style Scrollbar =====
+   Thin, minimal scrollbar matching VS Code aesthetic */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #464646;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #707070;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #969696;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #464646 transparent;
+}
+
+*:hover {
+  scrollbar-color: #707070 transparent;
+}
+
 * {
   box-sizing: border-box;
 }
