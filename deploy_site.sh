@@ -182,20 +182,39 @@ fi
 # 5. Build Next.js static export with the AWS API URL baked in.
 #    Static export inlines NEXT_PUBLIC_* at build time, so the frontend
 #    connects to the AWS backend with no runtime config on GoDaddy.
+#    Note: .env.local takes precedence, so we temporarily move it to ensure
+#    .env.production is used.
 # ------------------------------------------------------------------------------
 echo "=== Writing frontend/.env.production (API base) ==="
 printf 'NEXT_PUBLIC_API_BASE=%s\n' "$API_BASE" > "$FRONTEND_DIR/.env.production"
+
+# Temporarily move .env.local to prevent it from overriding .env.production
+local env_local_backup=""
+if [[ -f "$FRONTEND_DIR/.env.local" ]]; then
+  env_local_backup="$FRONTEND_DIR/.env.local.backup.$$"
+  print_info "Temporarily moving .env.local to use .env.production during build..."
+  mv "$FRONTEND_DIR/.env.local" "$env_local_backup"
+fi
 
 echo "=== Build Next.js frontend (static export) ==="
 cd "$FRONTEND_DIR"
 npm run build
 
+# Restore .env.local if we backed it up
+if [[ -n "$env_local_backup" && -f "$env_local_backup" ]]; then
+  mv "$env_local_backup" "$FRONTEND_DIR/.env.local"
+  print_info "Restored .env.local"
+fi
+
 # Verify the API URL actually landed in the bundle — the #1 silent failure mode
-if ! grep -rqF "$API_BASE" "$FRONTEND_DIR/out/_next/static" 2>/dev/null; then
-  echo "ERROR: API base was NOT baked into the build output. Aborting rather than deploying a broken site."
+# Check in the out directory (which contains both HTML and JS bundles)
+if ! grep -rqF "$API_BASE" "$FRONTEND_DIR/out" 2>/dev/null; then
+  print_error "API base was NOT baked into the build output. Build verification FAILED."
+  print_error "Expected to find: $API_BASE"
+  print_error "Check: .env.production and next.config.js for output configuration"
   exit 1
 fi
-print_success "Build verified: API base present in bundle"
+print_success "Build verified: API base ($API_BASE) baked into bundle"
 
 # Prepare deployment directory with rsync checksum sync
 print_info "Preparing deployment directory with checksum sync..."
