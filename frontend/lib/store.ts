@@ -162,7 +162,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   // Visual execution trace per spec §5: BFS from root nodes, live status
   // transitions, green edge highlighting, and collecting node outputs.
   simulate: async () => {
-    const { nodes, edges, setNodeStatus, resetExecution } = get();
+    const { nodes, edges, setNodeStatus, resetExecution, query } = get();
     if (nodes.length === 0 || get().status === "running") return;
     resetExecution();
     set({ status: "running", error: null, result: null, telemetry: null });
@@ -172,8 +172,9 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     // Generate sample outputs for each node based on type
     const nodeOutputs: Record<string, string> = {};
     const inputNode = nodes.find((n) => n.type === "text_input");
-    if (inputNode?.data?.config?.input) {
-      nodeOutputs[inputNode.id] = String(inputNode.data.config.input);
+    if (inputNode) {
+      const inputText = String(inputNode.data?.config?.input || query || "[Sample Input]");
+      nodeOutputs[inputNode.id] = inputText;
     }
 
     const targetIds = new Set(edges.map((e) => e.target));
