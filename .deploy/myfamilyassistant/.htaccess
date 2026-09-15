@@ -1,7 +1,7 @@
 # Apache mod_rewrite rules for Single Page App (Next.js static export)
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
+  RewriteBase /myfamilyassistant.ai/
   
   # Skip rewriting for existing files
   RewriteCond %{REQUEST_FILENAME} -f
@@ -14,4 +14,3 @@
   # Rewrite all other requests to index.html for SPA routing
   RewriteRule ^ index.html [L]
 </IfModule>
-
