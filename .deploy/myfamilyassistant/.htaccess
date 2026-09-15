@@ -1,18 +1,14 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
+  RewriteBase /myfamilyassistant.ai/
   
-  # Don't rewrite requests for actual files or directories
+  # SPA routing: only rewrite routes that don't correspond to files or directories
+  # For any path, if a file/directory exists, serve it directly
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  
-  # Don't rewrite the _next directory or public files (static assets)
-  RewriteCond %{REQUEST_URI} !^/myfamilyassistant\.ai/_next/
-  RewriteCond %{REQUEST_URI} !^/_next/
-  
-  # SPA routing: rewrite everything else to index.html
-  RewriteRule ^(.*)$ index.html [L]
+  RewriteRule ^ index.html [QSA,L]
 </IfModule>
+
 
 
 
