@@ -31,7 +31,7 @@ export function Hero() {
               margin: "16px 0",
             }}
           >
-            Build AI agents like <span className="gradient-text">connecting dots</span>,
+            Build AI agents like <span className="glow-text">connecting</span> dots,
             not writing glue code.
           </motion.h1>
           <motion.p
