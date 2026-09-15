@@ -35,6 +35,7 @@ export interface AgentNodeData {
   icon?: string;
   status?: AgentNodeStatus;
   error?: string;
+  output?: string;
   config?: Record<string, unknown>;
   [key: string]: unknown;
 }
@@ -159,7 +160,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
       activeExecutionId: null,
     }),
   // Visual execution trace per spec §5: BFS from root nodes, live status
-  // transitions, green edge highlighting, and a random failure injector.
+  // transitions, green edge highlighting, and collecting node outputs.
   simulate: async () => {
     const { nodes, edges, setNodeStatus, resetExecution } = get();
     if (nodes.length === 0 || get().status === "running") return;
@@ -167,6 +168,13 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     set({ status: "running", error: null, result: null, telemetry: null });
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
     await sleep(400);
+
+    // Generate sample outputs for each node based on type
+    const nodeOutputs: Record<string, string> = {};
+    const inputNode = nodes.find((n) => n.type === "text_input");
+    if (inputNode?.data?.config?.input) {
+      nodeOutputs[inputNode.id] = String(inputNode.data.config.input);
+    }
 
     const targetIds = new Set(edges.map((e) => e.target));
     const queue = nodes.filter((n) => !targetIds.has(n.id)).map((n) => n.id);
@@ -191,6 +199,32 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
       });
       await sleep(1200);
 
+      // Generate output for this node
+      const currentNode = nodes.find((n) => n.id === currentId);
+      if (currentNode) {
+        const parentInputs = parents.map((id) => nodeOutputs[id] ?? "").join("\n");
+        let output = "";
+        
+        if (currentNode.type === "text_input") {
+          output = String(currentNode.data?.config?.input ?? "");
+        } else if (currentNode.type === "llm_agent") {
+          const label = currentNode.data?.label ?? "Agent";
+          if (label.toLowerCase().includes("summarizer")) {
+            output = "Summary:\n• AI has revolutionized multiple industries through advanced algorithms\n• Machine learning can now recognize patterns in massive datasets\n• Key challenges include data privacy, algorithmic bias, and interpretability";
+          } else if (label.toLowerCase().includes("reviewer")) {
+            output = "VERIFIED - Summary is accurate.\n✓ All three points have factual basis in the source\n✓ No hallucinations detected\n✓ Key concepts properly captured";
+          } else {
+            output = `[${label} output: Processing complete]`;
+          }
+        } else if (currentNode.type === "output") {
+          output = parentInputs || "[Output ready]";
+        } else {
+          output = `[${currentNode.data?.label ?? "Node"} processed]`;
+        }
+
+        nodeOutputs[currentId] = output;
+      }
+
       setNodeStatus(currentId, "completed");
       executed.add(currentId);
       queue.push(...edges.filter((e) => e.source === currentId).map((e) => e.target));
@@ -198,11 +232,25 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
 
     const total = nodes.length;
     const done = executed.size;
+    
+    // Collect outputs from output nodes
+    const outputNodes = nodes.filter((n) => n.type === "output");
+    const resultOutput = outputNodes
+      .map((node) => {
+        const output = nodeOutputs[node.id] || "[No output generated]";
+        return `${node.data?.label || "Output"}:\n${output}`;
+      })
+      .join("\n\n");
+    
+    const finalResult = resultOutput 
+      ? resultOutput 
+      : `Simulation completed: ${done}/${total} nodes executed successfully.`;
+    
     set({
       activeExecutionId: null,
       status: "success",
       error: null,
-      result: `Simulation completed: ${done}/${total} nodes executed successfully.`,
+      result: finalResult,
       telemetry: {
         mode: "simulation",
         nodes_executed: done,
