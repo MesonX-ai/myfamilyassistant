@@ -234,7 +234,7 @@ if [[ "${FORCE_FULL_UPLOAD:-0}" == "1" ]]; then
   # Force full mirror without checksum checking — useful after failed partial uploads
   print_info "Force full upload mode: uploading ALL files (--delete removes remote-only files)"
   lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" \
-    -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --delete --verbose $DEPLOY_DIR $FTP_PATH; bye"
+    -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --delete --verbose \"$DEPLOY_DIR\" \"$FTP_PATH\"; bye"
   print_success "GoDaddy upload completed (full mirror)"
 else
   # Checksum-based incremental upload (default)
@@ -281,7 +281,7 @@ else
     cp "$local_manifest" "$delta_dir/myfamilyassistant-deploy-manifest.sha256"
 
     lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" \
-      -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --verbose $delta_dir $FTP_PATH; bye"
+      -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --verbose \"$delta_dir\" \"$FTP_PATH\"; bye"
 
     # Record this deployment so the next run only uploads changed files
     cp "$local_manifest" "$cache_manifest"
