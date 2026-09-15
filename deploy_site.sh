@@ -243,7 +243,7 @@ build_local_manifest "$local_manifest"
 # Fetch the previously-uploaded manifest to compute a checksum diff
 for mf in myfamilyassistant-deploy-manifest.sha256 .deploy-manifest.sha256; do
   lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" \
-    -e "set ftp:passive-mode true; set ftp:ssl-allow no; set cmd:fail-exit no; get /$mf -o $remote_manifest; bye" \
+    -e "set ftp:passive-mode true; set ftp:ssl-allow no; set cmd:fail-exit no; get $FTP_PATH/$mf -o $remote_manifest; bye" \
     >/dev/null 2>&1 || true
   [[ -s "$remote_manifest" ]] && break
 done
@@ -271,7 +271,7 @@ else
   cp "$local_manifest" "$delta_dir/myfamilyassistant-deploy-manifest.sha256"
 
   lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" \
-    -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --verbose $delta_dir /; bye"
+    -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --verbose $delta_dir $FTP_PATH; bye"
 
   # Record this deployment so the next run only uploads changed files
   cp "$local_manifest" "$cache_manifest"
