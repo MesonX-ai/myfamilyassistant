@@ -1,11 +1,12 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /myfamilyassistant.ai/
   
-  # The following check allows files/directories through without rewriting
+  # Don't rewrite requests for real files or directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
   
-  # Default SPA routing: send everything else to index.html
-  RewriteRule ^ index.html [L]
+  # Rewrite all other requests to index.html
+  RewriteRule ^ index.html [QSA,L]
 </IfModule>
