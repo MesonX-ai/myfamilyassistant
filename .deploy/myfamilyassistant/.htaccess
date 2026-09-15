@@ -1,0 +1,19 @@
+# Apache mod_rewrite rules for Single Page App (Next.js static export)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Skip rewriting for _next static assets
+  RewriteRule ^_next - [L]
+  
+  # Skip rewriting common static file extensions
+  RewriteRule \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ - [L]
+  
+  # Skip rewriting robots.txt, sitemap.xml, etc
+  RewriteRule ^(robots\.txt|sitemap\.xml|favicon\.ico)$ - [L]
+  
+  # For any other request that doesn't correspond to an actual file/directory
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
