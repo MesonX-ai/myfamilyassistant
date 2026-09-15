@@ -1,0 +1,16 @@
+# Apache mod_rewrite rules for Single Page App (Next.js static export)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /myfamilyassistant.ai/
+  
+  # Skip rewriting for existing files
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+  
+  # Skip rewriting for existing directories
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  
+  # Rewrite all other requests to index.html for SPA routing
+  RewriteRule ^ index.html [L]
+</IfModule>
