@@ -172,7 +172,6 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     const queue = nodes.filter((n) => !targetIds.has(n.id)).map((n) => n.id);
     const executed = new Set<string>();
     const startedAt = Date.now();
-    let failedId: string | null = null;
     let guard = 0;
 
     while (queue.length > 0 && guard++ < 1000) {
@@ -192,12 +191,6 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
       });
       await sleep(1200);
 
-      // Random failure injector (~15%) to demonstrate error-state visuals
-      if (Math.random() > 0.85) {
-        failedId = currentId;
-        setNodeStatus(currentId, "failed", "Inference quota exceeded or guardrail blocked the response path.");
-        break;
-      }
       setNodeStatus(currentId, "completed");
       executed.add(currentId);
       queue.push(...edges.filter((e) => e.source === currentId).map((e) => e.target));
@@ -207,19 +200,15 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     const done = executed.size;
     set({
       activeExecutionId: null,
-      status: failedId ? "error" : "success",
-      error: failedId
-        ? `Simulation halted at node "${nodes.find((n) => n.id === failedId)?.data.label ?? failedId}".`
-        : null,
-      result: failedId
-        ? `Simulation halted: ${done}/${total} nodes completed before the failure.`
-        : `Simulation completed: ${done}/${total} nodes executed successfully.`,
+      status: "success",
+      error: null,
+      result: `Simulation completed: ${done}/${total} nodes executed successfully.`,
       telemetry: {
         mode: "simulation",
         nodes_executed: done,
         nodes_total: total,
         duration_ms: Date.now() - startedAt,
-        failed_node: failedId ?? "none",
+        failed_node: "none",
       },
     });
   },
