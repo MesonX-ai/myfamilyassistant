@@ -6,8 +6,9 @@
 # verifies the backend is healthy, then mirrors the site to GoDaddy via FTP.
 #
 # Usage:
-#   ./deploy_site.sh                  # full: git push + build + upload
-#   SKIP_GIT=1 ./deploy_site.sh       # build + upload only
+#   ./deploy_site.sh                  # full: git push + build + incremental upload
+#   SKIP_GIT=1 ./deploy_site.sh       # build + incremental upload only
+#   FORCE_FULL_UPLOAD=1 ./deploy_site.sh    # git push + build + full mirror (no checksum)
 #   API_BASE=https://... ./deploy_site.sh   # override backend endpoint
 #
 set -euo pipefail
@@ -216,70 +217,80 @@ if ! grep -rqF "$API_BASE" "$FRONTEND_DIR/out" 2>/dev/null; then
 fi
 print_success "Build verified: API base ($API_BASE) baked into bundle"
 
-# Prepare deployment directory with rsync checksum sync
-print_info "Preparing deployment directory with checksum sync..."
+# Prepare deployment directory
+print_info "Preparing deployment directory..."
 mkdir -p "$DEPLOY_DIR"
 require_command rsync
-rsync -a --checksum --delete "$FRONTEND_DIR/out/" "$DEPLOY_DIR/"
+rsync -a --delete "$FRONTEND_DIR/out/" "$DEPLOY_DIR/"
 print_success "Deployment directory prepared"
 
 # ------------------------------------------------------------------------------
-# 6. Upload to GoDaddy via FTP using checksum-based incremental uploads
+# 6. Upload to GoDaddy via FTP (checksum-based or full mirror)
 # ------------------------------------------------------------------------------
 print_info "Uploading to GoDaddy FTP: $FTP_HOST:$FTP_PATH"
 require_command lftp
-require_command python3
 
-tmp_dir="$(mktemp -d)"
-local_manifest="$tmp_dir/local-manifest.sha256"
-remote_manifest="$tmp_dir/remote-manifest.sha256"
-changed_list="$tmp_dir/changed-files.txt"
-delta_dir="$tmp_dir/upload-delta"
-cache_manifest="$SCRIPT_DIR/.deploy/last-deploy-manifest.sha256"
-mkdir -p "$(dirname "$cache_manifest")"
-
-build_local_manifest "$local_manifest"
-
-# Fetch the previously-uploaded manifest to compute a checksum diff
-for mf in myfamilyassistant-deploy-manifest.sha256 .deploy-manifest.sha256; do
+if [[ "${FORCE_FULL_UPLOAD:-0}" == "1" ]]; then
+  # Force full mirror without checksum checking — useful after failed partial uploads
+  print_info "Force full upload mode: uploading ALL files (--delete removes remote-only files)"
   lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" \
-    -e "set ftp:passive-mode true; set ftp:ssl-allow no; set cmd:fail-exit no; get $FTP_PATH/$mf -o $remote_manifest; bye" \
-    >/dev/null 2>&1 || true
-  [[ -s "$remote_manifest" ]] && break
-done
-
-# Fall back to the locally cached last-deploy manifest if the remote is empty
-if [[ ! -s "$remote_manifest" && -s "$cache_manifest" ]]; then
-  cp "$cache_manifest" "$remote_manifest"
-fi
-
-build_changed_files_list "$local_manifest" "$remote_manifest" "$changed_list"
-
-changed_count="$(wc -l < "$changed_list" | tr -d ' ')"
-
-if [[ "$changed_count" == "0" ]]; then
-  print_success "No content changes detected; nothing to upload"
-  rm -rf "$tmp_dir"
+    -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --delete --verbose $DEPLOY_DIR $FTP_PATH; bye"
+  print_success "GoDaddy upload completed (full mirror)"
 else
-  print_info "Uploading $changed_count changed/new file(s) to GoDaddy based on checksum diff..."
+  # Checksum-based incremental upload (default)
+  require_command python3
+  
+  tmp_dir="$(mktemp -d)"
+  local_manifest="$tmp_dir/local-manifest.sha256"
+  remote_manifest="$tmp_dir/remote-manifest.sha256"
+  changed_list="$tmp_dir/changed-files.txt"
+  delta_dir="$tmp_dir/upload-delta"
+  cache_manifest="$SCRIPT_DIR/.deploy/last-deploy-manifest.sha256"
+  mkdir -p "$(dirname "$cache_manifest")"
 
-  mkdir -p "$delta_dir"
-  (
-    cd "$DEPLOY_DIR"
-    rsync -a --files-from="$changed_list" ./ "$delta_dir/"
-  )
-  cp "$local_manifest" "$delta_dir/myfamilyassistant-deploy-manifest.sha256"
+  build_local_manifest "$local_manifest"
 
-  lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" \
-    -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --verbose $delta_dir $FTP_PATH; bye"
+  # Fetch the previously-uploaded manifest to compute a checksum diff
+  for mf in myfamilyassistant-deploy-manifest.sha256 .deploy-manifest.sha256; do
+    lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" \
+      -e "set ftp:passive-mode true; set ftp:ssl-allow no; set cmd:fail-exit no; get $FTP_PATH/$mf -o $remote_manifest; bye" \
+      >/dev/null 2>&1 || true
+    [[ -s "$remote_manifest" ]] && break
+  done
 
-  # Record this deployment so the next run only uploads changed files
-  cp "$local_manifest" "$cache_manifest"
+  # Fall back to the locally cached last-deploy manifest if the remote is empty
+  if [[ ! -s "$remote_manifest" && -s "$cache_manifest" ]]; then
+    cp "$cache_manifest" "$remote_manifest"
+  fi
 
-  print_success "GoDaddy upload completed"
+  build_changed_files_list "$local_manifest" "$remote_manifest" "$changed_list"
+
+  changed_count="$(wc -l < "$changed_list" | tr -d ' ')"
+
+  if [[ "$changed_count" == "0" ]]; then
+    print_success "No content changes detected; nothing to upload"
+    rm -rf "$tmp_dir"
+  else
+    print_info "Uploading $changed_count changed/new file(s) to GoDaddy based on checksum diff..."
+
+    mkdir -p "$delta_dir"
+    (
+      cd "$DEPLOY_DIR"
+      rsync -a --files-from="$changed_list" ./ "$delta_dir/"
+    )
+    cp "$local_manifest" "$delta_dir/myfamilyassistant-deploy-manifest.sha256"
+
+    lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" \
+      -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --verbose $delta_dir $FTP_PATH; bye"
+
+    # Record this deployment so the next run only uploads changed files
+    cp "$local_manifest" "$cache_manifest"
+
+    print_success "GoDaddy upload completed (incremental)"
+  fi
+
+  rm -rf "$tmp_dir"
 fi
-
-rm -rf "$tmp_dir"
 
 # ------------------------------------------------------------------------------
 # 7. Post-deploy smoke test (warning only — hosting may throttle fresh files)
