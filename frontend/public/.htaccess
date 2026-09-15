@@ -1,0 +1,16 @@
+# Apache mod_rewrite rules for Single Page App (Next.js static export)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Exclude static file paths from rewriting
+  RewriteCond %{REQUEST_URI} \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ [OR]
+  RewriteCond %{REQUEST_URI} ^/_next/
+  RewriteRule ^ - [L]
+  
+  # Skip rewriting for actual files/directories
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  
+  # Rewrite all other requests to index.html for SPA routing
+  RewriteRule ^ index.html [L]
+</IfModule>
