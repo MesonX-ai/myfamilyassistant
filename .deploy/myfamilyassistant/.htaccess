@@ -6,12 +6,14 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   
-  # Don't rewrite the _next directory (static assets)
+  # Don't rewrite the _next directory or public files (static assets)
+  RewriteCond %{REQUEST_URI} !^/myfamilyassistant\.ai/_next/
   RewriteCond %{REQUEST_URI} !^/_next/
   
   # SPA routing: rewrite everything else to index.html
   RewriteRule ^(.*)$ index.html [L]
 </IfModule>
+
 
 
 
