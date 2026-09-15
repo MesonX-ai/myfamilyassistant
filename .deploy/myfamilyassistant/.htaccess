@@ -2,11 +2,17 @@
   RewriteEngine On
   RewriteBase /
   
-  # SPA routing: rewrite non-existent files/dirs to index.html for myfamilyassistant.ai
+  # Don't rewrite requests for actual files or directories
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
+  
+  # Don't rewrite the _next directory (static assets)
+  RewriteCond %{REQUEST_URI} !^/_next/
+  
+  # SPA routing: rewrite everything else to index.html
   RewriteRule ^(.*)$ index.html [L]
 </IfModule>
+
 
 
 
