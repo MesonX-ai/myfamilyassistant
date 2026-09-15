@@ -2,15 +2,18 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   
-  # Exclude static file paths from rewriting
-  RewriteCond %{REQUEST_URI} \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ [OR]
-  RewriteCond %{REQUEST_URI} ^/_next/
-  RewriteRule ^ - [L]
+  # Skip rewriting for _next static assets
+  RewriteRule ^_next - [L]
   
-  # Skip rewriting for actual files/directories
+  # Skip rewriting common static file extensions
+  RewriteRule \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ - [L]
+  
+  # Skip rewriting robots.txt, sitemap.xml, etc
+  RewriteRule ^(robots\.txt|sitemap\.xml|favicon\.ico)$ - [L]
+  
+  # For any other request that doesn't correspond to an actual file/directory
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  
-  # Rewrite all other requests to index.html for SPA routing
   RewriteRule ^ index.html [L]
 </IfModule>
+
