@@ -171,7 +171,8 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
 
     // Generate sample outputs for each node based on type
     const nodeOutputs: Record<string, string> = {};
-    const inputNode = nodes.find((n) => n.type === "text_input");
+    // Handle both "text_input" and "trigger" types as input nodes
+    const inputNode = nodes.find((n) => n.type === "text_input" || n.type === "trigger");
     if (inputNode) {
       const inputText = String(inputNode.data?.config?.input || query || "[Sample Input]");
       nodeOutputs[inputNode.id] = inputText;
@@ -206,7 +207,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
         const parentInputs = parents.map((id) => nodeOutputs[id] ?? "").join("\n");
         let output = "";
         
-        if (currentNode.type === "text_input") {
+        if (currentNode.type === "text_input" || currentNode.type === "trigger") {
           output = String(currentNode.data?.config?.input ?? "");
         } else if (currentNode.type === "llm_agent") {
           const label = currentNode.data?.label ?? "Agent";
