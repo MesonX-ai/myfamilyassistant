@@ -104,21 +104,25 @@ input {
 }
 
 .glow-text {
-  background: linear-gradient(90deg, #6b6bff, #ff6b9d, #6b6bff);
+  background: linear-gradient(90deg, #6b6bff 0%, #ff6b9d 50%, #6b6bff 100%);
+  background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
   filter: drop-shadow(0 0 8px rgba(107, 107, 255, 0.6)) drop-shadow(0 0 16px rgba(255, 107, 157, 0.4));
-  animation: glow-pulse 3s ease-in-out infinite;
+  animation: gradient-flow 3s ease-in-out infinite;
 }
 
-@keyframes glow-pulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 8px rgba(107, 107, 255, 0.6)) drop-shadow(0 0 16px rgba(255, 107, 157, 0.4));
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% center;
   }
   50% {
-    filter: drop-shadow(0 0 16px rgba(107, 107, 255, 0.8)) drop-shadow(0 0 24px rgba(255, 107, 157, 0.6));
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
   }
 }
 
