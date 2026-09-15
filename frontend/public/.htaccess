@@ -1,9 +1,12 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /
   
-  # Rebase to the myfamilyassistant.ai subdirectory
-  RewriteBase /myfamilyassistant.ai/
+  # SPA routing: rewrite non-existent files/dirs to index.html for myfamilyassistant.ai
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.*)$ index.html [L]
 </IfModule>
+
+
+
