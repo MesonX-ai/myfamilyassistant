@@ -271,7 +271,7 @@ else
   cp "$local_manifest" "$delta_dir/myfamilyassistant-deploy-manifest.sha256"
 
   lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -p "$FTP_PORT" \
-    -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --verbose $delta_dir $FTP_PATH; bye"
+    -e "set ftp:passive-mode true; set ftp:ssl-allow no; mirror -R --verbose $delta_dir /; bye"
 
   # Record this deployment so the next run only uploads changed files
   cp "$local_manifest" "$cache_manifest"

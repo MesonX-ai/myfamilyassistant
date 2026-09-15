@@ -23,13 +23,16 @@ export const SAMPLE_WORKFLOWS: SampleWorkflow[] = [
     nodes: [
       {
         id: "input-trigger",
-        type: "trigger",
+        type: "text_input",
         position: { x: 50, y: 150 },
         data: {
           label: "Text Input",
           icon: "lucide:inbox",
           status: "idle",
-          config: {},
+          config: {
+            input: "",
+            variableName: "userInput",
+          },
         },
       },
       {
