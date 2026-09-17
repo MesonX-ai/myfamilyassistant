@@ -21,17 +21,20 @@ export const SAMPLE_WORKFLOWS: SampleWorkflow[] = [
     sampleInput: "sample.pdf",
     nodes: [
       {
-        id: "file-upload",
-        type: "file_input",
+        id: "text-input",
+        type: "text_input",
         position: { x: 50, y: 150 },
         data: {
-          label: "Upload Document",
+          label: "Upload & Input",
           icon: "lucide:upload-cloud",
           status: "idle",
           config: {
             acceptedFormats: [".pdf", ".docx", ".doc", ".txt"],
             maxFileSize: 10485760,
-            variableName: "uploadedFile",
+            variableName: "inputContent",
+            placeholder: "Upload document or paste text content...",
+            allowFileUpload: true,
+            allowTextInput: true,
           },
         },
       },
@@ -40,12 +43,12 @@ export const SAMPLE_WORKFLOWS: SampleWorkflow[] = [
         type: "tool",
         position: { x: 250, y: 150 },
         data: {
-          label: "Extract Text from Document",
+          label: "Parse Document",
           icon: "lucide:file-json",
           status: "idle",
           config: {
             toolName: "document_parser",
-            description: "Extracts text content from PDF, Word, or TXT files for processing",
+            description: "Extracts and normalizes text content from uploaded files or pasted text",
           },
         },
       },
@@ -97,17 +100,21 @@ export const SAMPLE_WORKFLOWS: SampleWorkflow[] = [
         },
       },
       {
-        id: "final-output",
+        id: "document-summary",
         type: "output",
         position: { x: 1100, y: 100 },
         data: {
-          label: "Download Summary",
-          icon: "lucide:download",
+          label: "Document Summary",
+          icon: "lucide:file-check",
           status: "idle",
           config: {
-            displayMode: "preview_with_downloads",
+            displayMode: "preview_with_format_selection",
+            showPreviewPanel: true,
             previewHeight: 400,
-            downloadFormats: ["pdf", "docx", "txt"],
+            formatSelectionLabel: "Export As:",
+            downloadFormats: ["txt", "docx", "pdf"],
+            allowFormatSelection: true,
+            showDownloadButtons: true,
           },
         },
       },
@@ -115,7 +122,7 @@ export const SAMPLE_WORKFLOWS: SampleWorkflow[] = [
     edges: [
       {
         id: "e1",
-        source: "file-upload",
+        source: "text-input",
         target: "doc-parser",
         animated: false,
       },
@@ -140,7 +147,7 @@ export const SAMPLE_WORKFLOWS: SampleWorkflow[] = [
       {
         id: "e5",
         source: "format-converter",
-        target: "final-output",
+        target: "document-summary",
         animated: false,
       },
     ],
