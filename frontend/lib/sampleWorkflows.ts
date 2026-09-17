@@ -13,32 +13,46 @@ export interface SampleWorkflow {
 
 export const SAMPLE_WORKFLOWS: SampleWorkflow[] = [
   {
-    id: "summarizer-reviewer",
-    name: "Summarizer & Reviewer",
+    id: "document-summarizer",
+    name: "Document Summarizer & Export",
     description:
-      "Two-agent workflow: Summarizer creates a 3-bullet summary, then Reviewer critiques it for accuracy and completeness.",
-    icon: "lucide:split-square-vertical",
-    sampleInput:
-      "Artificial intelligence (AI) has revolutionized multiple industries over the past decade. From healthcare diagnostics to autonomous vehicles, AI systems are becoming increasingly sophisticated. Machine learning algorithms can now recognize patterns in massive datasets that would take humans years to analyze. However, challenges remain including data privacy concerns, algorithmic bias, and the need for interpretable AI systems. Leading tech companies are investing billions into AI research, while governments worldwide are developing policies to ensure responsible AI development.",
+      "Upload Word, PDF, or TXT documents. AI summarizes the content into 3 key points, verifies accuracy, and allows download as PDF, DOCX, or TXT.",
+    icon: "lucide:file-text",
+    sampleInput: "sample.pdf",
     nodes: [
       {
-        id: "input-trigger",
-        type: "text_input",
+        id: "file-upload",
+        type: "file_input",
         position: { x: 50, y: 150 },
         data: {
-          label: "Text Input",
-          icon: "lucide:inbox",
+          label: "Upload Document",
+          icon: "lucide:upload-cloud",
           status: "idle",
           config: {
-            input: "",
-            variableName: "userInput",
+            acceptedFormats: [".pdf", ".docx", ".doc", ".txt"],
+            maxFileSize: 10485760,
+            variableName: "uploadedFile",
+          },
+        },
+      },
+      {
+        id: "doc-parser",
+        type: "tool",
+        position: { x: 250, y: 150 },
+        data: {
+          label: "Extract Text from Document",
+          icon: "lucide:file-json",
+          status: "idle",
+          config: {
+            toolName: "document_parser",
+            description: "Extracts text content from PDF, Word, or TXT files for processing",
           },
         },
       },
       {
         id: "summarizer-agent",
         type: "llm_agent",
-        position: { x: 300, y: 80 },
+        position: { x: 450, y: 80 },
         data: {
           label: "Summarizer Agent",
           icon: "lucide:bot",
@@ -47,14 +61,14 @@ export const SAMPLE_WORKFLOWS: SampleWorkflow[] = [
             model: "claude-3-5-sonnet",
             temperature: 0.3,
             systemPrompt:
-              "You are a professional summarization agent. Create a concise, 3-bullet-point summary of the provided text. Each bullet should capture a key concept.",
+              "You are a professional document summarization expert. Analyze the extracted document content and create a concise, 3-bullet-point summary. Each bullet should capture the most important concept. Format output as:\n• [Key Point 1]\n• [Key Point 2]\n• [Key Point 3]",
           },
         },
       },
       {
         id: "reviewer-agent",
         type: "llm_agent",
-        position: { x: 550, y: 80 },
+        position: { x: 700, y: 80 },
         data: {
           label: "Reviewer Agent",
           icon: "lucide:shield-check",
@@ -63,39 +77,70 @@ export const SAMPLE_WORKFLOWS: SampleWorkflow[] = [
             model: "claude-3-5-sonnet",
             temperature: 0.5,
             systemPrompt:
-              "You are a quality assurance reviewer. Evaluate the summary for accuracy against the original text. Check for hallucinations and missing critical facts. Output: VERIFIED (if accurate) or REWRITE (with corrections).",
+              "You are a quality assurance reviewer for document summaries. Evaluate the 3-bullet summary against the original document. Verify each point is accurate and no key concepts are missing. Output format:\n[VERIFIED/NEEDS_REVISION]\n✓ [Verification point 1]\n✓ [Verification point 2]\n✓ [Verification point 3]",
           },
         },
       },
       {
-        id: "final-summary",
-        type: "output",
-        position: { x: 800, y: 80 },
+        id: "format-converter",
+        type: "tool",
+        position: { x: 900, y: 150 },
         data: {
-          label: "Final Summary Output",
-          icon: "lucide:file-text",
+          label: "Format Converter",
+          icon: "lucide:file-output",
           status: "idle",
-          config: {},
+          config: {
+            toolName: "format_converter",
+            description: "Converts summary to PDF, DOCX, or TXT format",
+            outputFormats: ["pdf", "docx", "txt"],
+          },
+        },
+      },
+      {
+        id: "final-output",
+        type: "output",
+        position: { x: 1100, y: 100 },
+        data: {
+          label: "Download Summary",
+          icon: "lucide:download",
+          status: "idle",
+          config: {
+            displayMode: "preview_with_downloads",
+            previewHeight: 400,
+            downloadFormats: ["pdf", "docx", "txt"],
+          },
         },
       },
     ],
     edges: [
       {
         id: "e1",
-        source: "input-trigger",
-        target: "summarizer-agent",
+        source: "file-upload",
+        target: "doc-parser",
         animated: false,
       },
       {
         id: "e2",
+        source: "doc-parser",
+        target: "summarizer-agent",
+        animated: false,
+      },
+      {
+        id: "e3",
         source: "summarizer-agent",
         target: "reviewer-agent",
         animated: false,
       },
       {
-        id: "e3",
+        id: "e4",
         source: "reviewer-agent",
-        target: "final-summary",
+        target: "format-converter",
+        animated: false,
+      },
+      {
+        id: "e5",
+        source: "format-converter",
+        target: "final-output",
         animated: false,
       },
     ],
