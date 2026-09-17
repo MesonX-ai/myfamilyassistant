@@ -1,8 +1,5 @@
+# This backend is deprecated - use sQuark-flow instead
+# Keeping for reference only
 fastapi
 uvicorn[standard]
 pydantic>=2,<3
-langgraph
-python-multipart
-upstash-redis
-pytest
-httpx

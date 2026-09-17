@@ -278,10 +278,11 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   },
   run: async () => {
     const { nodes, edges, query } = get();
-    const apiBase = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
+    // Point to unified sQuark-flow backend (Bedrock + Claude 3.5 Sonnet integration)
+    const apiBase = process.env.NEXT_PUBLIC_API_BASE ?? "https://api.squark-flow.ai";
 
-    if (!nodes.some((n) => n.type === "trigger")) {
-      set({ error: "Canvas must include at least one trigger node.", status: "error" });
+    if (!nodes.some((n) => n.type === "trigger" || n.type === "text_input")) {
+      set({ error: "Canvas must include at least one input node.", status: "error" });
       return;
     }
     if (!nodes.some((n) => n.type === "output")) {
@@ -292,34 +293,50 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     set({ status: "running", error: null, result: null, telemetry: null });
 
     try {
+      // Call sQuark-flow execution endpoint with proper ExecutionRequest format
       const res = await fetch(
-        `${apiBase}/api/v1/pipeline/execute-canvas?initial_query=${encodeURIComponent(query)}`,
+        `${apiBase}/api/v1/executions`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            workspace_id: "ws-local",
+            workflow_id: "wf-canvas-demo",
+            workspace_id: "ws-myfamilyassistant",
+            input_payload: query || "[Default Canvas Input]",
             nodes: nodes.map((n) => ({
               id: n.id,
               type: n.type,
-              data: { label: (n.data?.label as string) ?? n.type },
+              data: { 
+                label: (n.data?.label as string) ?? n.type,
+                config: n.data?.config || {}
+              },
             })),
             edges: edges.map((e) => ({ id: e.id, source: e.source, target: e.target })),
           }),
-          signal: AbortSignal.timeout(30000),
+          signal: AbortSignal.timeout(60000), // 60s timeout for LLM execution
         },
       );
 
       if (!res.ok) {
-        const detail = (await res.json().catch(() => ({}))) as { detail?: string };
-        throw new Error(detail.detail || `HTTP ${res.status}`);
+        const detail = (await res.json().catch(() => ({}))) as { detail?: string; error?: string };
+        throw new Error(detail.detail || detail.error || `HTTP ${res.status}`);
       }
 
-      const data = (await res.json()) as {
-        result: string;
-        telemetry: Record<string, unknown>;
-      };
-      set({ result: data.result, telemetry: data.telemetry, status: "success" });
+      const data = (await res.json()) as any;
+      const output = data.result?.output || data.result || "Execution completed";
+      const cost = data.total_cost_usd || 0;
+      
+      set({ 
+        result: output, 
+        telemetry: {
+          cost_usd: cost,
+          token_usage: data.token_usage,
+          execution_id: data.execution_id,
+          model: "claude-3-5-sonnet",
+          provider: "aws-bedrock",
+        }, 
+        status: "success" 
+      });
     } catch (err) {
       set({
         error: err instanceof Error ? err.message : "Execution failed",
