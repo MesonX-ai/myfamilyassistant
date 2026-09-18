@@ -9,6 +9,7 @@ import {
   type Node,
   type NodeChange,
 } from "reactflow";
+import { SAMPLE_WORKFLOWS } from "@/lib/sampleWorkflows";
 
 export type AgentNodeType =
   | "trigger"
@@ -75,10 +76,12 @@ interface CanvasState {
 
 const STORAGE_KEY = "myfa-canvas-state";
 
-const DEFAULT_NODES: Node<AgentNodeData>[] = [];
-const DEFAULT_EDGES: Edge[] = [];
+// Initialize with the Document Summarizer sample workflow
+const documentSummarizerWorkflow = SAMPLE_WORKFLOWS.find(w => w.id === "document-summarizer");
+const DEFAULT_NODES: Node<AgentNodeData>[] = documentSummarizerWorkflow?.nodes || [];
+const DEFAULT_EDGES: Edge[] = documentSummarizerWorkflow?.edges || [];
 
-let idCounter = 1;
+let idCounter = 100;
 const newNodeId = () => `node_${idCounter++}`;
 
 export const useCanvasStore = create<CanvasState>((set, get) => ({
@@ -302,16 +305,8 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
           body: JSON.stringify({
             workflow_id: "wf-canvas-demo",
             workspace_id: "ws-myfamilyassistant",
-            input_payload: query || "[Default Canvas Input]",
-            nodes: nodes.map((n) => ({
-              id: n.id,
-              type: n.type,
-              data: { 
-                label: (n.data?.label as string) ?? n.type,
-                config: n.data?.config || {}
-              },
-            })),
-            edges: edges.map((e) => ({ id: e.id, source: e.source, target: e.target })),
+            initial_input: query || "[Default Canvas Input]",
+            streaming: false,
           }),
           signal: AbortSignal.timeout(60000), // 60s timeout for LLM execution
         },
