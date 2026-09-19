@@ -52,6 +52,46 @@ export default function AboutPage() {
                 reliable, reactive agents that handle tasks around the home and
                 office, quietly and securely in the background.
               </p>
+              {/* Founder & company attribution — SEO signals for target keywords. */}
+              <p className="section-sub" style={{ margin: "16px 0 0" }}>
+                MyFamilyAssistant.ai is built by{" "}
+                <a
+                  href="https://linkedin.com/in/shiva-dhanuskodi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "var(--accent)" }}
+                >
+                  Shiva Dhanuskodi (AniShiv)
+                </a>{" "}
+                — founder of{" "}
+                <a
+                  href="https://mesonsoft.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "var(--accent)" }}
+                >
+                  Mesonsoft LLC
+                </a>{" "}
+                — and runs on the{" "}
+                <a
+                  href="https://mesonx.ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "var(--accent)" }}
+                >
+                  MesonX
+                </a>{" "}
+                agent runtime. MyFamilyAssistant.ai is part of the{" "}
+                <a
+                  href="https://mesonsoft.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "var(--accent)" }}
+                >
+                  Mesonsoft
+                </a>{" "}
+                family of AI tools for families and teams.
+              </p>
             </div>
             <div>
               <h2 className="section-title" style={{ fontSize: 28, margin: "0 0 14px" }}>

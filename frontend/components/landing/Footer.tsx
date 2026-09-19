@@ -66,12 +66,50 @@ export function Footer() {
           fontSize: 13,
         }}
       >
-        <span>© {new Date().getFullYear()} MyFamilyAssistant.ai. All rights reserved.</span>
-        <span style={{ display: "flex", gap: 20 }}>
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
-          <a href="#">Security</a>
+        <span>
+          © {new Date().getFullYear()}{" "}
+          <Link href="/about" style={{ color: "inherit", textDecoration: "none" }}>
+            Mesonsoft LLC
+          </Link>{" "}
+          — creators of MyFamilyAssistant.ai and the MesonX agent platform.
         </span>
+        <span style={{ display: "flex", gap: 20 }}>
+          <Link href="/about">About</Link>
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
+          <Link href="/security">Security</Link>
+        </span>
+      </div>
+      {/* Brand & founder attribution — SEO signal for target keywords. */}
+      <div
+        className="container"
+        style={{
+          marginTop: 18,
+          paddingBottom: 24,
+          fontSize: 12,
+          color: "var(--muted)",
+          lineHeight: 1.5,
+        }}
+      >
+        <p style={{ margin: 0 }}>
+          Built by{" "}
+          <Link
+            href="/about"
+            style={{ color: "var(--accent)", textDecoration: "none" }}
+          >
+            Shiva Dhanuskodi (AniShiv)
+          </Link>{" "}
+          — founder of Mesonsoft LLC. MyFamilyAssistant.ai runs on the{" "}
+          <a
+            href="https://mesonx.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "var(--accent)", textDecoration: "none" }}
+          >
+            MesonX
+          </a>{" "}
+          agent runtime.
+        </p>
       </div>
     </footer>
   );
