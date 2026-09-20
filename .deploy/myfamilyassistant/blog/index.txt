@@ -1,7 +1,115 @@
 2:I[6513,[],"ClientPageRoot"]
-3:I[9881,["873","static/chunks/873-996d3e562bc1142a.js","359","static/chunks/359-93e2d3ab07f8ddfd.js","404","static/chunks/app/blog/page-46e8da78a1d0d245.js"],"default"]
+3:I[9881,["873","static/chunks/873-996d3e562bc1142a.js","359","static/chunks/359-93e2d3ab07f8ddfd.js","404","static/chunks/app/blog/page-73846089c1874865.js"],"default"]
 4:I[9275,[],""]
 5:I[1343,[],""]
-0:["8nx-t9iu2C5YcVYe_xMXC",[[["",{"children":["blog",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",{"children":["blog",{"children":["__PAGE__",{},[["$L1",["$","$L2",null,{"props":{"params":{},"searchParams":{}},"Component":"$3"}]],null],null]},["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined","styles":null}],null]},[["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[],"styles":null}]}]]}],null],null],[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/90885938219e2870.css","precedence":"next","crossOrigin":"$undefined"}]],[null,"$L6"]]]]]
-6:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","1",{"charSet":"utf-8"}],["$","title","2",{"children":"MyFamilyAssistant.ai — Visual Agentic Workflow Platform"}],["$","meta","3",{"name":"description","content":"Design, connect, and run AI agent workflows on a living canvas. MyFamilyAssistant.ai turns ideas into running LangGraph agents — no glue code required."}],["$","link","4",{"rel":"icon","href":"/icon.png?fa06e14e1ce08d19","type":"image/png","sizes":"72x34"}]]
+6:Te48,{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://myfamilyassistant.ai#organization",
+      "name": "Mesonsoft LLC",
+      "url": "https://myfamilyassistant.ai",
+      "logo": "https://myfamilyassistant.ai/logo.png",
+      "sameAs": [
+        "https://www.linkedin.com/company/mesonsoft-llc",
+        "https://twitter.com/mesonsoft",
+        "https://www.facebook.com/mesonsoft"
+      ],
+      "foundingDate": "2024",
+      "founder": {
+        "@type": "Person",
+        "@id": "https://myfamilyassistant.ai#person",
+        "name": "Shiva Dhanuskodi",
+        "alternateName": "AniShiv",
+        "url": "https://myfamilyassistant.ai/about",
+        "image": "https://myfamilyassistant.ai/logo.png",
+        "jobTitle": "Founder & Lead Engineer",
+        "worksFor": {
+          "@id": "https://myfamilyassistant.ai#organization"
+        },
+        "knowsAbout": [
+          "AI agent workflows",
+          "LangGraph",
+          "visual programming",
+          "family automation",
+          "MesonX"
+        ]
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://myfamilyassistant.ai#software",
+      "name": "MyFamilyAssistant.ai",
+      "alternateName": [
+        "AniShiv",
+        "MesonX Family Agent"
+      ],
+      "url": "https://myfamilyassistant.ai",
+      "description": "A visual agentic workflow platform for families and small teams. Design, connect, and run AI agents on a living canvas — powered by the MesonX agent runtime from Mesonsoft LLC.",
+      "applicationCategory": "ProductivityApplication",
+      "applicationSubCategory": "AI Agent Platform",
+      "operatingSystem": "Web",
+      "softwareVersion": "1.0.0",
+      "provider": {
+        "@id": "https://myfamilyassistant.ai#organization"
+      },
+      "creator": {
+        "@id": "https://myfamilyassistant.ai#person"
+      },
+      "featureList": [
+        "Visual node-and-wire agent builder",
+        "No glue code required",
+        "LangGraph-based agents",
+        "Family-friendly by design",
+        "Privacy by default",
+        "24/7 reactive workflows"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://myfamilyassistant.ai#website",
+      "name": "MyFamilyAssistant.ai",
+      "url": "https://myfamilyassistant.ai",
+      "description": "MyFamilyAssistant.ai is a visual agentic workflow platform from Mesonsoft LLC that lets families and small teams design, connect, and run AI agents on a living canvas — no glue code required. Built by Shiva Dhanuskodi (AniShiv) with the MesonX agent runtime.",
+      "publisher": {
+        "@id": "https://myfamilyassistant.ai#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://myfamilyassistant.ai/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://myfamilyassistant.ai#webpage",
+      "@list": [
+        "https://myfamilyassistant.ai"
+      ],
+      "name": "MyFamilyAssistant.ai",
+      "url": "https://myfamilyassistant.ai",
+      "about": {
+        "@id": "https://myfamilyassistant.ai#software"
+      },
+      "isPartOf": {
+        "@id": "https://myfamilyassistant.ai#website"
+      },
+      "publisher": {
+        "@id": "https://myfamilyassistant.ai#organization"
+      },
+      "inLanguage": "en-US"
+    }
+  ]
+}0:["sNuh6z88QjlI8tSeYXmW2",[[["",{"children":["blog",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",{"children":["blog",{"children":["__PAGE__",{},[["$L1",["$","$L2",null,{"props":{"params":{},"searchParams":{}},"Component":"$3"}]],null],null]},["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined","styles":null}],null]},[["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap","rel":"stylesheet"}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"$6"}}]]}],["$","body",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[],"styles":null}]}]]}],null],null],[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/90885938219e2870.css","precedence":"next","crossOrigin":"$undefined"}]],[null,"$L7"]]]]]
+7:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","1",{"charSet":"utf-8"}],["$","title","2",{"children":"MyFamilyAssistant.ai — Visual Agentic Workflow Platform"}],["$","meta","3",{"name":"description","content":"MyFamilyAssistant.ai is a visual agentic workflow platform from Mesonsoft LLC that lets families and small teams design, connect, and run AI agents on a living canvas — no glue code required. Built by Shiva Dhanuskodi (AniShiv) with the MesonX agent runtime."}],["$","link","4",{"rel":"author","href":"https://myfamilyassistant.ai/about"}],["$","meta","5",{"name":"author","content":"Shiva Dhanuskodi (AniShiv)"}],["$","meta","6",{"name":"keywords","content":"family AI assistant, visual agentic workflow platform, AI agents for families, LangGraph agents, no-code AI workflows, Mesonsoft LLC, Shiva Dhanuskodi, AniShiv, MesonX"}],["$","meta","7",{"name":"creator","content":"Shiva Dhanuskodi (AniShiv)"}],["$","meta","8",{"name":"publisher","content":"Mesonsoft LLC"}],["$","meta","9",{"name":"robots","content":"index, follow"}],["$","meta","10",{"name":"googlebot","content":"index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"}],["$","meta","11",{"property":"og:title","content":"MyFamilyAssistant.ai — Visual Agentic Workflow Platform"}],["$","meta","12",{"property":"og:description","content":"MyFamilyAssistant.ai is a visual agentic workflow platform from Mesonsoft LLC that lets families and small teams design, connect, and run AI agents on a living canvas — no glue code required. Built by Shiva Dhanuskodi (AniShiv) with the MesonX agent runtime."}],["$","meta","13",{"property":"og:url","content":"https://myfamilyassistant.ai/"}],["$","meta","14",{"property":"og:site_name","content":"MyFamilyAssistant.ai"}],["$","meta","15",{"property":"og:locale","content":"en_US"}],["$","meta","16",{"property":"og:image","content":"https://myfamilyassistant.ai/hero.png"}],["$","meta","17",{"property":"og:image:width","content":"1200"}],["$","meta","18",{"property":"og:image:height","content":"630"}],["$","meta","19",{"property":"og:image:alt","content":"MyFamilyAssistant.ai — visual agentic workflow platform"}],["$","meta","20",{"property":"og:type","content":"website"}],["$","meta","21",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","22",{"name":"twitter:creator","content":"@AniShiv"}],["$","meta","23",{"name":"twitter:title","content":"MyFamilyAssistant.ai — Visual Agentic Workflow Platform"}],["$","meta","24",{"name":"twitter:description","content":"MyFamilyAssistant.ai is a visual agentic workflow platform from Mesonsoft LLC that lets families and small teams design, connect, and run AI agents on a living canvas — no glue code required. Built by Shiva Dhanuskodi (AniShiv) with the MesonX agent runtime."}],["$","meta","25",{"name":"twitter:image","content":"https://myfamilyassistant.ai/hero.png"}],["$","link","26",{"rel":"icon","href":"/icon.png?fa06e14e1ce08d19","type":"image/png","sizes":"72x34"}]]
 1:null
