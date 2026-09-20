@@ -186,8 +186,28 @@ fi
 #    Note: .env.local takes precedence, so we temporarily move it to ensure
 #    .env.production is used.
 # ------------------------------------------------------------------------------
-print_info "Writing frontend/.env.production (API base)"
-printf 'NEXT_PUBLIC_API_BASE=%s\n' "$API_BASE" > "$FRONTEND_DIR/.env.production"
+# Resolve the Google OAuth client ID the same way as API_BASE, so it survives
+# every deploy. Priority: $GOOGLE_CLIENT_ID env var > existing .env.production
+# (preserve across deploys) > frontend/.env.local.
+GOOGLE_CLIENT_ID="${GOOGLE_CLIENT_ID:-}"
+if [[ -z "$GOOGLE_CLIENT_ID" ]]; then
+  GOOGLE_CLIENT_ID="$(sed -n 's/^NEXT_PUBLIC_GOOGLE_CLIENT_ID=//p' "$FRONTEND_DIR/.env.production" 2>/dev/null | head -n 1)"
+fi
+if [[ -z "$GOOGLE_CLIENT_ID" ]]; then
+  GOOGLE_CLIENT_ID="$(sed -n 's/^NEXT_PUBLIC_GOOGLE_CLIENT_ID=//p' "$FRONTEND_DIR/.env.local" 2>/dev/null | head -n 1)"
+fi
+
+print_info "Writing frontend/.env.production (API base + Google client ID)"
+{
+  printf 'NEXT_PUBLIC_API_BASE=%s\n' "$API_BASE"
+  if [[ -n "$GOOGLE_CLIENT_ID" ]]; then
+    printf 'NEXT_PUBLIC_GOOGLE_CLIENT_ID=%s\n' "$GOOGLE_CLIENT_ID"
+  fi
+} > "$FRONTEND_DIR/.env.production"
+if [[ -z "$GOOGLE_CLIENT_ID" ]]; then
+  print_error "NEXT_PUBLIC_GOOGLE_CLIENT_ID is not set — Google sign-in will show 'not configured' on the live site."
+  print_error "Fix: GOOGLE_CLIENT_ID=<id> ./deploy_site.sh  (or add NEXT_PUBLIC_GOOGLE_CLIENT_ID to frontend/.env.local)"
+fi
 
 # Temporarily move .env.local to prevent it from overriding .env.production
 env_local_backup=""
@@ -216,6 +236,16 @@ if ! grep -rqF "$API_BASE" "$FRONTEND_DIR/out" 2>/dev/null; then
   exit 1
 fi
 print_success "Build verified: API base ($API_BASE) baked into bundle"
+
+# Verify the Google client ID made it into the JS bundle too (same silent-failure class)
+if [[ -n "$GOOGLE_CLIENT_ID" ]]; then
+  if ! grep -rqF "$GOOGLE_CLIENT_ID" "$FRONTEND_DIR/out" 2>/dev/null; then
+    print_error "Google client ID was NOT baked into the build output. Build verification FAILED."
+    print_error "Expected to find: $GOOGLE_CLIENT_ID"
+    exit 1
+  fi
+  print_success "Build verified: Google client ID baked into bundle"
+fi
 
 # Prepare deployment directory
 print_info "Preparing deployment directory..."
